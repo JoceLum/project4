@@ -1,4 +1,4 @@
-var showApp = {};
+let showApp = {};
 showApp.key = "bd9f6a5c409c05ff7938f1d2d7cae63e";
 
 showApp.getShows = function(show) {
@@ -26,11 +26,12 @@ showApp.getShows = function(show) {
             }).then(function(res) {
                 //res will be the list of shows that have same genre of the TV show that's submitted by the user
                 var results = res.results;
+                console.log(results);
                 showApp.displayShows(results);
             });
 
         } else {
-            $('#warning').text ("Hmm, that one's a bit too obscure...");
+            $('#warning').text("Hmm, that show's a bit too obscure...");
         }
     });
 }
@@ -44,12 +45,16 @@ showApp.displayShows = function(showData) {
             let titles = $('<h3>').text(show.name);
             //image path for the show's poster
             let imageUrl = `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${show.poster_path}`;
+            let secondImageUrl = `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${show.backdrop_path}`;
             //bind image path and show ID to image tag of show poster
-            let poster = $('<img>').attr('src', imageUrl).attr('dataId', show.id).addClass('lazy');
-            //create containers to store poster and title content 
-            let showContainer = $('<div>').addClass('show').append(poster, titles);
+            let poster = $('<img>').attr('src', imageUrl).attr('dataId', show.id).addClass('poster');
+            let playIcon = $('<img>').attr('src', 'assets/play_button.png').addClass('playButton');
+            // create containers to store poster and title content 
+            let showContainer = $('<div>').addClass('show').append(poster, playIcon, titles);
             //append containers to section with id of shows
             $('#shows').append(showContainer);
+            //show new search button
+            $('#restart').css('display', 'block');
         }
     })
 };
@@ -72,10 +77,20 @@ showApp.events = function() {
         }
     });
 
+    //show play button upon hovering over show poster
+    $('#shows').on('mouseenter', '.poster', function() {
+        let thisPoster = $(this).parent();
+        thisPoster.find('.playButton').show();
+    }).on('mouseleave', '.poster', function() {
+        console.log('mouseout')
+        let thisPoster = $(this).parent();
+        thisPoster.find('.playButton').hide();
+    });
+
     //when user clicks on TV show poster, will bring up modal with trailer for show
-    $('#shows').on('click', '.show img', function() {
+    $('#shows').on('click', '.show', function() {
         //store TV show id in a variable to be passed into ajax call 
-        var singleUrl = $(this).attr("dataId");
+        let singleUrl = $(this).find('.poster').attr("dataId");
         // console.log(singleUrl);
         $.ajax({
             url: `https://api.themoviedb.org/3/tv/${singleUrl}/videos?api_key=${showApp.key}`,
@@ -87,13 +102,13 @@ showApp.events = function() {
             }
         }).then(function(res) {
             //after ajax call is complete, store value of the key in a variable called videos
-            var videos = res.results;
+            let videos = res.results;
             //only return videos with the type "Trailer or Opening Credits, otherwise display error that there are no videos
             var videoKey;
             //to narrow down to shows that have videos 
             if (videos.length !== 0) {
                 //first, narrow down to shows that have trailers
-                var trailers = videos.filter(function(video) {
+                let trailers = videos.filter(function(video) {
                     return video.type === "Trailer";
                 });
                 //if there are no trailers, store first video of remaining video types (opening credits, featurettes, etc.)
@@ -116,6 +131,11 @@ showApp.events = function() {
             lity(`//www.youtube.com/watch?v=${videoKey}`)
         });
     });
+    $('#restart').on('click', function(e) {
+        e.preventDefault();
+        location.reload();
+    })
+
 }
 //init function that initializes our code
 showApp.init = function() {

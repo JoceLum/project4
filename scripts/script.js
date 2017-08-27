@@ -13,19 +13,25 @@ showApp.getShows = function(show) {
         }
     }).then(function(res) {
         //second ajax call to retrieve all shows that share the same genre as the show submitted by user
-        return $.ajax({
-            url: `https://api.themoviedb.org/3/discover/tv?with_genres=${res.results[0].genre_ids[0]}&api_key=${showApp.key}`,
-            method: 'GET',
-            dataType: 'json',
-            data: {
-                key: showApp.key,
-                format: 'json'
-            }
-        });
-    }).then(function(res) {
-            //res will be the list of shows that have same genre of the TV show that's submitted by the user
-            var results = res.results;
-            showApp.displayShows(results);
+        //will only run if user's input actually matches a show in api's database; otherwise, will show error message
+        if (res.results !== null && res.results.length > 0) {
+            return $.ajax({
+                url: `https://api.themoviedb.org/3/discover/tv?with_genres=${res.results[0].genre_ids[0]}&api_key=${showApp.key}`,
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    key: showApp.key,
+                    format: 'json'
+                }
+            }).then(function(res) {
+                //res will be the list of shows that have same genre of the TV show that's submitted by the user
+                var results = res.results;
+                showApp.displayShows(results);
+            });
+
+        } else {
+            $('#warning').text ("Hmm, that one's a bit too obscure...");
+        }
     });
 }
 
@@ -56,14 +62,11 @@ showApp.events = function() {
         //store input if there is something, and scroll to results section; otherwise, let user know that they need to submit something
         let usersChoice = $('#show').val();
         if (usersChoice !== "") {
-                showApp.getShows(usersChoice);
-                $('html, body').animate({
-                    scrollTop: $("#shows").offset().top
-                }, 1000);
-                this.reset();
-            // } else {
-            //     alert("hmm, that one's a bit too obscure..");
-            // }
+            showApp.getShows(usersChoice);
+            $('html, body').animate({
+                scrollTop: $("#shows").offset().top
+            }, 1000);
+            this.reset();
         } else {
             $(this).find('#warning').text("Come on, we won't judge...");
         }

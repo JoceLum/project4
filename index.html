@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>What Should I Watch Next?!</title>
+    <!--general style sheet-->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!--Google fonts-->
+    <link href='http://fonts.googleapis.com/css?family=Varela|Limelight|Merriweather&v2' rel='stylesheet' type='text/css'>
+    <!--favicon-->
+    <link type="image/png" href="assets/ico-tv.png" rel="icon">
+    <!--Video pop-up effect-->
+    <link rel="stylesheet" href="styles/lity.css">
+    <!--Sweet Alert msg for shows that don't have videos-->
+    <link rel="stylesheet" type="text/css" href="styles/sweetalert.css">
+</head>
+
+<body>
+    <header>
+        <div class="wrapper">
+            <h1>What Should I Watch Next?!</h1>
+            <h2>Now that you're done binge watching every season of [insert show name], what similar shows are there to fill the void?</h2>
+            <form action="">
+                <label for="show">Which show did you just watch?</label>
+                <input type="text" name="show" id="show" placeholder="Show">
+                <p id="warning"></p>
+                <input type="submit" class="submit submitSpecial" data-hash="#shows" value="Submit">
+            </form>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper">
+            <div id="shows"></div>
+        </div>
+    </main>
+    <!--jQuery CDN-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!--Sweet Alert CDN-->
+    <script src="scripts/sweetalert.min.js"></script>
+    <!--jQuery pop-up video-->
+    <script src="scripts/lity.js"></script>
+    <!--General script file-->
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>

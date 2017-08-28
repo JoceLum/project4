@@ -112,7 +112,7 @@ input[type='submit'] {
 
 .show {
 	position: relative;
-	background-color: #aebac2;
+	background: linear-gradient(to right, #bcbcbc 0%, #9b9698 100%);
 	margin-bottom: 30px;
 	border-radius: 10px;
 }

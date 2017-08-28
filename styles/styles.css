@@ -28,6 +28,12 @@ input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer;}b
 	margin: 0 auto;
 }
 
+main {
+	background-image: url(../assets/results_background.jpg);
+	background-repeat: repeat;
+
+}
+
 h1 {
 	font-family: 'Limelight', cursive;
 	font-size: 6rem;
@@ -35,10 +41,13 @@ h1 {
 	text-shadow: 3px 3px 1px #ADADAD;
 }
 
+h2,
+h3 {
+	text-shadow: 1px 1px 2px #ADADAD;
+}
+
 h2 {
 	font-size: 1.8rem;
-	text-shadow: 1px 1px 2px #ADADAD;
-
 }
 
 p {
@@ -51,7 +60,6 @@ form {
 	justify-content: center;
 	align-items: center;
 }
-
 
 input {
 	margin: 10px;
@@ -86,6 +94,15 @@ input[type='submit'] {
    box-shadow: 1px 1px 0px #66B8D4, 2px 2px 0px #66B8D4, 3px 3px 0px #66B8D4, 4px 4px 0px #66B8D4, 5px 5px 0px #66B8D4, 6px 6px 0px #66B8D4, 7px 7px 0px #66B8D4, 0px 0px 3px rgba(0, 0, 0, 0.8);
 }
 
+#playMsg {
+	display: none;
+	font-family: 'Limelight', cursive;
+	margin: 0;
+	padding-top: 50px;
+	color: #4a4a4b;
+	text-transform: uppercase;
+}
+
 #shows {
 	display: flex;
 	flex-wrap: wrap;
@@ -95,6 +112,14 @@ input[type='submit'] {
 
 .show {
 	position: relative;
+	background-color: #aebac2;
+	margin-bottom: 30px;
+	border-radius: 10px;
+}
+
+.poster {
+	border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .poster:hover {
@@ -126,12 +151,20 @@ input[type='submit'] {
 
 /*MEDIA QUERIES*/
 
+@media (max-width: 480px) {
+	h1 {
+		font-size: 4rem;
+	}
+ }
+
 @media (max-width: 768px) {
 	h1 {
 		font-size: 5rem;
 	}
+	#playMsg {
+		display: block;
+	}
  }
-
 
 @media (max-width: 940px) {
 	header h2 {

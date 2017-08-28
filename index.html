@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>What Should I Watch Next?!</title>
     <!--general style sheet-->
     <link rel="stylesheet" href="styles/styles.css">
@@ -20,7 +21,7 @@
     <header>
         <div class="wrapper">
             <h1>What Should I Watch Next?!</h1>
-            <h2>Now that you're done binge watching every season of [insert show name], what similar shows are there to fill the void?</h2>
+            <h2>Now that you're done binge watching yet another Netflix original, what similar shows are there to fill the void?</h2>
             <form action="">
                 <label for="show">Which show did you just watch?</label>
                 <input type="text" name="show" id="show" placeholder="Show">
@@ -31,6 +32,7 @@
     </header>
     <main>
         <div class="wrapper">
+        <h2 id="playMsg"></h2>
             <div id="shows"><!--show results will be added in here dynamically--></div>
             
             <input type="submit" class="submit submitSpecial" id="restart" value="Search Another Show">

@@ -5,11 +5,12 @@ showApp.getShows = function(show) {
     $('#warning').empty();
     //first ajax call to retrieve TV show that's submitted by user from the api's database
     $.ajax({
-        url: `https://api.themoviedb.org/3/search/tv?api_key=${showApp.key}&query=${show}`,
+        url: 'https://api.themoviedb.org/3/search/tv?',
         method: 'GET',
         dataType: 'json',
         data: {
-            key: showApp.key,
+            api_key: showApp.key,
+            query: show,
             format: 'json'
         }
     }).then(function(res) {
@@ -28,7 +29,6 @@ showApp.getShows = function(show) {
                 //res will be the list of shows that have same genre of the TV show that's submitted by the user
                 var results = res.results;
                 showApp.displayShows(results);
-                console.log(results);
             });
 
         } else {

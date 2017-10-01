@@ -5,7 +5,7 @@ showApp.getShows = function(show) {
     $('#warning').empty();
     //first ajax call to retrieve TV show that's submitted by user from the api's database
     $.ajax({
-        url: 'https://api.themoviedb.org/3/search/tv?',
+        url: 'https://api.themoviedb.org/3/search/tv',
         method: 'GET',
         dataType: 'json',
         data: {
@@ -18,11 +18,12 @@ showApp.getShows = function(show) {
         //will only run if user's input actually matches a show in api's database; otherwise, will show error message
         if (res.results !== null && res.results.length > 0) {
             return $.ajax({
-                url: `https://api.themoviedb.org/3/discover/tv?with_genres=${res.results[0].genre_ids[0]}&api_key=${showApp.key}`,
+                url: `https://api.themoviedb.org/3/discover/tv`,
                 method: 'GET',
                 dataType: 'json',
                 data: {
-                    key: showApp.key,
+                    api_key: showApp.key,
+                    with_genres: res.results[0].genre_ids[0],
                     format: 'json'
                 }
             }).then(function(res) {
@@ -45,19 +46,23 @@ showApp.displayShows = function(showData) {
         if (show.poster_path !== null) {
             //name of the show
             let titles = $('<h3>').text(show.name);
+            //more details button
+            let moreDetails = $('<a>').addClass('moreDetails').text('More Details');
+            //overview of the show
+            // let overview = $('<p>').text(show.overview);
             //image path for the show's poster
             let imageUrl = `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${show.poster_path}`;
             //bind image path and show ID to image tag of show poster
             let poster = $('<img>').attr('src', imageUrl).attr('dataId', show.id).addClass('poster');
             let playIcon = $('<img>').attr('src', 'assets/play_button.png').addClass('playButton');
             // create containers to store poster and title content 
-            let showContainer = $('<div>').addClass('show').append(poster, playIcon, titles);
+            let showContainer = $('<div>').addClass('show').append(poster, playIcon, titles, moreDetails);
             //append containers to section with id of shows
             $('#shows').append(showContainer);
             //show new search button below results
             $('#restart').show();
         }
-    })
+    });
 };
 
 showApp.events = function() {
@@ -78,6 +83,14 @@ showApp.events = function() {
         }
     });
 
+    //when click "More Details" button, display more info of each show
+    $('#shows').on('click', '.moreDetails', function(){
+        console.log("test");
+        swal({
+            text: 'test'
+        })
+    });
+
     //show play button upon hovering over show poster
     $('#shows').on('mouseenter', '.poster', function() {
         let posterWrapper = $(this).parent();
@@ -88,15 +101,15 @@ showApp.events = function() {
     });
 
     //when user clicks on TV show poster, will open up lightbox with trailer for show
-    $('#shows').on('click', '.show', function() {
+    $('#shows').on('click', '.show img', function() {
         //store TV show id in a variable to be passed into ajax call 
-        let singleUrl = $(this).find('.poster').attr("dataId");
+        let singleUrl = $('.show').find('.poster').attr("dataId");
         $.ajax({
-            url: `https://api.themoviedb.org/3/tv/${singleUrl}/videos?api_key=${showApp.key}`,
+            url: `https://api.themoviedb.org/3/tv/${singleUrl}/videos`,
             method: 'GET',
             dataType: 'json',
             data: {
-                key: showApp.key,
+                api_key: showApp.key,
                 format: 'json'
             }
         }).then(function(res) {
@@ -123,20 +136,22 @@ showApp.events = function() {
                 return swal({
                     title: "Sorry!",
                     text: "We don't have any videos for this show",
-                    imageUrl: "assets/broken_tv.png"
+                    imageUrl: "assets/broken_tv.png",
+                    imageWidth: 240,
+                    imageHeight: 200,
+                    imageAlt: 'Broken TV'
                 });
             }
             //append the stored key from above to the Youtube URL and pass into lity function to open video in lightbox
             lity(`//www.youtube.com/watch?v=${videoKey}`)
         });
     });
-    //if want to do another search, refresh page and scroll back to top
+    //if want to do another search, go back to top of page and refresh  
     $('#restart').on('click', function(e) {
         e.preventDefault();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
         location.reload();
-        $(window).scrollTop(0);
     })
-
 }
 //init function that initializes our code
 showApp.init = function() {

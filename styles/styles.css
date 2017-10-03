@@ -66,6 +66,11 @@ a {
     color: #fff;
 }
 
+li {
+    list-style: none;
+    padding: 10px;
+}
+
 a:hover {
     color: #6FD2F2;
     cursor: pointer;
@@ -159,6 +164,15 @@ footer {
 
 .show h2 {
     font-size: 1.3rem;
+}
+
+.showName,
+.showInfo {
+    color: #fff;
+}
+
+.showInfo span {
+    font-weight: 400;
 }
 
 #loadMore,

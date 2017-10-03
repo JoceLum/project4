@@ -1,7 +1,8 @@
 let showApp = {};
 showApp.key = "bd9f6a5c409c05ff7938f1d2d7cae63e";
+showApp.pageCount = 1;
 
-showApp.getShows = function(show) {
+showApp.getShows = (show) => {
     $('#warning').empty();
     //first ajax call to retrieve TV show that's submitted by user from the api's database
     $.ajax({
@@ -13,43 +14,45 @@ showApp.getShows = function(show) {
             query: show,
             format: 'json'
         }
-    }).then(function(res) {
+    }).then((res) => {
         //second ajax call to retrieve all shows that share the same genre as the show submitted by user
         //will only run if user's input actually matches a show in api's database; otherwise, will show error message
         if (res.results !== null && res.results.length > 0) {
-            return $.ajax({
-                url: `https://api.themoviedb.org/3/discover/tv`,
-                method: 'GET',
-                dataType: 'json',
-                data: {
-                    api_key: showApp.key,
-                    with_genres: res.results[0].genre_ids[0],
-                    format: 'json'
-                }
-            }).then(function(res) {
-                //res will be the list of shows that have same genre of the TV show that's submitted by the user
-                var results = res.results;
-                showApp.displayShows(results);
-            });
-
+            showApp.genreId = res.results[0].genre_ids[0];
+            return showApp.getShowsByGenre(showApp.genreId);
         } else {
             $('#warning').text("Hmm, that show's a bit too obscure...");
         }
     });
 }
 
-showApp.displayShows = function(showData) {
+showApp.getShowsByGenre = (genreId) => {
+    $.ajax({
+        url: `https://api.themoviedb.org/3/discover/tv`,
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            api_key: showApp.key,
+            page: showApp.pageCount,
+            with_genres: genreId,
+            format: 'json'
+        }
+    }).then((res) => {
+        //res will be the list of shows that have same genre of the TV show that's submitted by the user
+        let results = res.results;
+        showApp.displayShows(results);
+    });
+}
+
+showApp.displayShows = (showData) => {
     $('#playMsg').text('Tap on the posters to view videos');
-    //to empty show container when user doing a search on another show without refreshing page:
-    $('#shows').empty();
-    showData.forEach(function(show) {
+
+    showData.forEach((show) => {
         if (show.poster_path !== null) {
             //name of the show
             let titles = $('<h3>').text(show.name);
             //more details button
             let moreDetails = $('<a>').addClass('moreDetails').text('More Details');
-            //overview of the show
-            // let overview = $('<p>').text(show.overview);
             //image path for the show's poster
             let imageUrl = `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${show.poster_path}`;
             //bind image path and show ID to image tag of show poster
@@ -59,16 +62,19 @@ showApp.displayShows = function(showData) {
             let showContainer = $('<div>').addClass('show').append(poster, playIcon, titles, moreDetails);
             //append containers to section with id of shows
             $('#shows').append(showContainer);
-            //show new search button below results
-            $('#restart').show();
+            console.log(show);
+            //show load more & new search buttons below results
+            $('#loadMore').css('display', 'block');
+            $('#restart').css('display', 'block');
         }
     });
 };
 
-showApp.events = function() {
+showApp.events = () => {
     //for user to submit the show that they just finished watching
     $('form').on('submit', function(e) {
         e.preventDefault();
+        $('#shows').empty();
         //store the value of the selected element
         //store input if there is something, and scroll to results section; otherwise, let user know that they need to submit something
         let usersInput = $('#show').val();
@@ -84,12 +90,12 @@ showApp.events = function() {
     });
 
     //when click "More Details" button, display more info of each show
-    $('#shows').on('click', '.moreDetails', function(){
-        console.log("test");
-        swal({
-            text: 'test'
-        })
-    });
+    // $('#shows').on('click', '.moreDetails', () => {
+    //     console.log(show);
+    //     swal({
+    //         text: 'test'
+    //     })
+    // });
 
     //show play button upon hovering over show poster
     $('#shows').on('mouseenter', '.poster', function() {
@@ -112,11 +118,11 @@ showApp.events = function() {
                 api_key: showApp.key,
                 format: 'json'
             }
-        }).then(function(res) {
+        }).then((res) => {
             //after ajax call is complete, store value of the key in a variable called videos
             let videos = res.results;
             //first, return videos with the type "Trailer; if there are no trailers, play other videos; if no videos, display error that there are no videos
-            var videoKey;
+            let videoKey;
             //to narrow down to shows that have videos 
             if (videos.length !== 0) {
                 //first, narrow down to shows that have trailers
@@ -146,18 +152,25 @@ showApp.events = function() {
             lity(`//www.youtube.com/watch?v=${videoKey}`)
         });
     });
+    //to load more results
+    $('#loadMore').on('click', (e) => {
+        e.preventDefault();
+        showApp.pageCount++;
+        showApp.getShowsByGenre(showApp.genreId);
+    });
+
     //if want to do another search, go back to top of page and refresh  
-    $('#restart').on('click', function(e) {
+    $('#restart').on('click', (e) => {
         e.preventDefault();
         $("html, body").animate({ scrollTop: 0 }, "slow");
         location.reload();
     })
 }
 //init function that initializes our code
-showApp.init = function() {
+showApp.init = () => {
     showApp.events();
 };
 //document ready that will run the init function
-$(function() {
+$(() => {
     showApp.init();
 });

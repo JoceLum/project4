@@ -161,9 +161,10 @@ footer {
     font-size: 1.3rem;
 }
 
+#loadMore,
 #restart {
     display: none;
-    margin: 50px auto;
+    margin: 30px auto;
 }
 
 /*MEDIA QUERIES*/

@@ -171,6 +171,12 @@ footer {
     color: #fff;
 }
 
+.showInfo {
+    width: 50%;
+    float: left;
+    text-align: left;
+}
+
 .showInfo span {
     font-weight: 400;
 }
@@ -195,6 +201,9 @@ footer {
     }
     #playMsg {
         display: block;
+    }
+    .showInfo {
+        width: 100%;            
     }
 }
 

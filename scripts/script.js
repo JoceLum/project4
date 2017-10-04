@@ -43,8 +43,6 @@ showApp.getShowsByGenre = (genreId) => {
         //res will be the list of shows that have same genre of the TV show that's submitted by the user
         let results = res.results;
         results.forEach((result) => {
-            // console.log(result.id);
-            // console.log(result);
             showApp.shows[result.id] = result;
         });
         showApp.displayShows(results);
@@ -104,30 +102,29 @@ showApp.events = () => {
         let showAirDate = showApp.shows[showId].first_air_date;
         let showVoteAvg = showApp.shows[showId].vote_average;
         let showVoteCount = showApp.shows[showId].vote_count;
+        let showImage = `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${showApp.shows[showId].backdrop_path}`
         swal({
             title: `<h3 class="showName">${showName}</h3>`,
-            html: `<ul class="showInfo"><li><span>Overview: </span>${showOverview}</li><li><span>First Air Date: </span>${showAirDate}</li><li><span>Vote Average: </span>${showVoteAvg}</li><li><span>Vote Count: </span>${showVoteCount}</li></ul>`,
-            background: '#6FD2F2',
-            width: 800 
+            html: `<div class="show-info"><ul class="showInfo"><li><span>Overview: </span>${showOverview}</li><li><span>First Air Date: </span>${showAirDate}</li><li><span>Vote Average: </span>${showVoteAvg} <i class="fa fa-star" aria-hidden="true"></i></li><li><span>Vote Count: </span>${showVoteCount}</li></div>
+                <div class="show-img"><img src="${showImage}"></div>`,
+            width: 800,
+            background: `#6FD2F2`
 
         })
     });
 
     //show play button upon hovering over show poster
-    $('#shows').on('mouseenter', '.poster', function() {
-        let posterWrapper = $(this).parent();
-        posterWrapper.find('.playButton').show();
-    }).on('mouseleave', '.poster', function() {
-        let posterWrapper = $(this).parent();
-        posterWrapper.find('.playButton').hide();
+    $('#shows').on('mouseenter', '.show', function() {
+        $(this).find('.playButton').show();
+    }).on('mouseleave', '.show', function() {
+        $(this).find('.playButton').hide();
     });
 
     //when user clicks on TV show poster, will open up lightbox with trailer for show
     $('#shows').on('click', '.show img.playButton', function() {
         //store TV show id in a variable to be passed into ajax call 
-
         let singleUrl = $(this).parent().attr("dataId");
-        
+
         $.ajax({
             url: `https://api.themoviedb.org/3/tv/${singleUrl}/videos`,
             method: 'GET',
@@ -158,12 +155,12 @@ showApp.events = () => {
             //if the show has no videos at all
             else {
                 return swal({
-                    title: "Sorry!",
-                    text: "We don't have any videos for this show",
-                    imageUrl: "assets/broken_tv.png",
+                    title: `<h3>Sorry!</h3>`,
+                    html: `<p>We don't have any videos for this show</p>`,
+                    imageUrl: `assets/broken_tv.png`,
                     imageWidth: 240,
                     imageHeight: 200,
-                    imageAlt: 'Broken TV'
+                    imageAlt: `Broken TV`
                 });
             }
             //append the stored key from above to the Youtube URL and pass into lity function to open video in lightbox

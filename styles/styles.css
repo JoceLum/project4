@@ -182,6 +182,11 @@ footer {
     font-weight: 400;
 }
 
+/*.showInfo li:first-child {
+    height: 300px;
+    overflow-y: scroll;
+}*/
+
 #loadMore,
 #restart {
     display: none;

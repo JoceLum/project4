@@ -99,6 +99,10 @@ showApp.events = () => {
         let showId = $(this).parent().attr('dataid');
         let showName = showApp.shows[showId].name;
         let showOverview = showApp.shows[showId].overview;
+        // if (showOverview.length > 500) {
+        //     console.log("whoa long overview");
+        //     $('.showInfo li:first-child').css('height', '300px').css('overflow-y', 'scroll');
+        // }
         let showAirDate = showApp.shows[showId].first_air_date;
         let showVoteAvg = showApp.shows[showId].vote_average;
         let showVoteCount = showApp.shows[showId].vote_count;
@@ -108,7 +112,8 @@ showApp.events = () => {
             html: `<div class="show-info"><ul class="showInfo"><li><span>Overview: </span>${showOverview}</li><li><span>First Air Date: </span>${showAirDate}</li><li><span>Vote Average: </span>${showVoteAvg} <i class="fa fa-star" aria-hidden="true"></i></li><li><span>Vote Count: </span>${showVoteCount}</li></div>
                 <div class="show-img"><img src="${showImage}"></div>`,
             width: 800,
-            background: `#6FD2F2`
+            background: `#6FD2F2`,
+            animation: false
 
         })
     });
